@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Ellipse
-from src.localization.ins_kalman_filter import linear_gpsimu_pos_kalman_filter
+from ins_kalman_filter import linear_gpsimu_pos_kalman_filter
 
 x0_mean = np.zeros((9, 1))
 x0_cov = 0.1 * np.eye(9)
