@@ -8,7 +8,7 @@ def run():
 	rospy.init_node('joy_to_input')
 	j = Joystick()
 	rospy.Subscriber('/joy', Joy, j.callback)
-	cmv_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
+	cmv_pub = rospy.Publisher('/velocity_cmd', Twist, queue_size=10)
 
 	rate = rospy.Rate(10)
 
