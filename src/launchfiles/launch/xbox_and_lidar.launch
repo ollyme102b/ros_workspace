@@ -1,7 +1,7 @@
 <launch>
 
 	<machine name="pc" address="10.42.0.187" user="rohan" timeout="20.0" env-loader="/home/rohan/Documents/Project-Olly/ros_workspace/local_env_loader.sh"/>
-	<machine name="olly" address="10.42.0.1" user="ubuntu" timeout="20.0" env-loader="/home/ubuntu/ME102b/remote_env_loader.sh"/>
+	<machine name="olly" address="10.42.0.1" user="ubuntu" timeout="20.0" env-loader="/home/ubuntu/Project_Olly/ros_workspace/remote_env_loader.sh"/>
 
 	<include file="$(find joy)/launch/xbox_controller.launch" />
 
@@ -13,7 +13,7 @@
     <!-- #############Lidar Nodes!############## -->
 
 	<node machine="olly" name="rplidarNode" pkg="rplidar_ros"  type="rplidarNode" output="screen">
-		<param name="serial_port"         type="string" value="/dev/ttyUSB1"/>
+		<param name="serial_port"         type="string" value="/dev/ttyUSB0"/>
 		<param name="serial_baudrate"     type="int"    value="115200"/><!--A1/A2 -->
 		<!--param name="serial_baudrate"     type="int"    value="256000"--><!--A3 -->
 		<param name="frame_id"            type="string" value="laser"/>
