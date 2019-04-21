@@ -1,4 +1,4 @@
 <launch>
 	<node name="joy_node" pkg="joy" type="joy_node"/>
-	<node name="joy_to_input" pkg="joy" type="joy_to_input.py">
+	<node name="joy_to_input" pkg="joy" type="joy_to_input.py"/>
 </launch>
