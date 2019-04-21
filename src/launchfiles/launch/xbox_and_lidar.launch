@@ -1,6 +1,6 @@
 <launch>
 
-	<machine name="pc" address="10.42.0.187" user="rohan" timeout="20.0" env-loader="/home/rohan/Documents/Project-Olly/local_env_loader.sh"/>
+	<machine name="pc" address="10.42.0.187" user="rohan" timeout="20.0" env-loader="/home/rohan/Documents/Project-Olly/ros_workspace/local_env_loader.sh"/>
 	<machine name="olly" address="10.42.0.1" user="ubuntu" timeout="20.0" env-loader="/home/ubuntu/ME102b/remote_env_loader.sh"/>
 
 	<include file="$(find joy)/launch/xbox_controller.launch" />
