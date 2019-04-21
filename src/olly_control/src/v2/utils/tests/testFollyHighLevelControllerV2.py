@@ -69,8 +69,9 @@ for t in range(T):
     #    'Folly High Level Controller V2 {0}/{1} Iteration Time {2:.2f}s'.format(t, T, new_time - prev_time))
     plt.xlabel('[m]')
     plt.ylabel('[m]')
-    plt.pause(np.maximum(dt - (new_time - prev_time), 0.01))  # pause in real time
 
+    plt.pause(0.01)
+    time.sleep(np.maximum(dt - (new_time - prev_time), 0.01)) # pause to match real time
     prev_time = new_time
     new_time = time.time()
 
