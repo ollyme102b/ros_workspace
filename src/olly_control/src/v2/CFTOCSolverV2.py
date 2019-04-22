@@ -10,23 +10,38 @@ class CFTOCSolverV2:
         :param Xm: updated Xm
         :return: optimal actuation
         """
-        self._update_problem(x0, Xm)
-        return self._solve_optimal_actuation()
+        self.update_problem(x0, Xm)
+        return self.solve_optimal_actuation()
 
-    def _update_problem(self, x0, Xm):
+    def update_Xm(self, Xm):
         """
-        Updates x0 and Xm parameters
-        :param x0: updated x0
-        :param Xm: updated Xm
+        update Xm parameter
         """
-        for i in range(self.nx):
-            self.x0[i].value = x0[i]
         for t in range(self.N):
             for i in range(self.nx):
                 self.Xm[i, t].value = Xm[i, t]
         return
 
-    def _solve_optimal_actuation(self):
+    def update_x0(self, x0):
+        """
+        update x0 parameter
+
+        """
+        for i in range(self.nx):
+            self.x0[i].value = x0[i]
+        return
+
+    def update_problem(self, x0, Xm):
+        """
+        Updates x0 and Xm parameters
+        :param x0: updated x0
+        :param Xm: updated Xm
+        """
+        self.update_x0(x0)
+        self.update_Xm(Xm)
+        return
+
+    def solve_optimal_actuation(self):
         """
         solves cvxpy problem and returns problem solution variable
         :return: optimal actuation value

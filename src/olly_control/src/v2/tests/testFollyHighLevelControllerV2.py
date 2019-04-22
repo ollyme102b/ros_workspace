@@ -3,7 +3,9 @@ import matplotlib.pyplot as plt
 import time
 
 from importlib.machinery import SourceFileLoader
-FollyHighLevelControllerV2 = SourceFileLoader('FollyHighLevelControllerV2', '../FollyHighLevelControllerV2.py').load_module()
+
+FollyHighLevelControllerV2 = SourceFileLoader('FollyHighLevelControllerV2',
+                                              '../FollyHighLevelControllerV2.py').load_module()
 from FollyHighLevelControllerV2 import FollyHighLevelControllerV2
 
 # Initialize Molly position
@@ -71,7 +73,7 @@ for t in range(T):
     plt.ylabel('[m]')
 
     plt.pause(0.01)
-    time.sleep(np.maximum(dt - (new_time - prev_time), 0.01)) # pause to match real time
+    time.sleep(np.maximum(dt - (new_time - prev_time), 0.01))  # pause to match real time
     prev_time = new_time
     new_time = time.time()
 
@@ -79,7 +81,8 @@ for t in range(T):
     molly_position = molly_position + dt * molly_velocity_command + dt * np.random.normal(0, sigma, 2)
 
     # compute folly command
-    folly_velocity_command = follyHLC.optimal_input(molly_position, folly_position, molly_velocity_command)
+    folly_velocity_command = follyHLC.update_then_calculate_optimal_actuation(molly_position, folly_position,
+                                                                              molly_velocity_command)
 
     # actuate optimal command with noise
     folly_position = folly_position + dt * folly_velocity_command + dt * np.random.normal(0, sigma, 2)
