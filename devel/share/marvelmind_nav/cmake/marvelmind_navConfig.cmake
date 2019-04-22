@@ -67,14 +67,14 @@ set(marvelmind_nav_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(marvelmind_nav_SOURCE_PREFIX /home/rohan/Documents/Project-Olly/ros_workspace/src/marvelmind_nav)
-  set(marvelmind_nav_DEVEL_PREFIX /home/rohan/Documents/Project-Olly/ros_workspace/devel)
+  set(marvelmind_nav_SOURCE_PREFIX /home/jasonanderson/ME102B_Project/ros_workspace/src/marvelmind_nav)
+  set(marvelmind_nav_DEVEL_PREFIX /home/jasonanderson/ME102B_Project/ros_workspace/devel)
   set(marvelmind_nav_INSTALL_PREFIX "")
   set(marvelmind_nav_PREFIX ${marvelmind_nav_DEVEL_PREFIX})
 else()
   set(marvelmind_nav_SOURCE_PREFIX "")
   set(marvelmind_nav_DEVEL_PREFIX "")
-  set(marvelmind_nav_INSTALL_PREFIX /home/rohan/Documents/Project-Olly/ros_workspace/install)
+  set(marvelmind_nav_INSTALL_PREFIX /home/jasonanderson/ME102B_Project/ros_workspace/install)
   set(marvelmind_nav_PREFIX ${marvelmind_nav_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(marvelmind_nav_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/rohan/Documents/Project-Olly/ros_workspace/devel/include;/home/rohan/Documents/Project-Olly/ros_workspace/src/marvelmind_nav/include/marvelmind_nav/ " STREQUAL " ")
+if(NOT "/home/jasonanderson/ME102B_Project/ros_workspace/devel/include;/home/jasonanderson/ME102B_Project/ros_workspace/src/marvelmind_nav/include/marvelmind_nav/ " STREQUAL " ")
   set(marvelmind_nav_INCLUDE_DIRS "")
-  set(_include_dirs "/home/rohan/Documents/Project-Olly/ros_workspace/devel/include;/home/rohan/Documents/Project-Olly/ros_workspace/src/marvelmind_nav/include/marvelmind_nav/")
+  set(_include_dirs "/home/jasonanderson/ME102B_Project/ros_workspace/devel/include;/home/jasonanderson/ME102B_Project/ros_workspace/src/marvelmind_nav/include/marvelmind_nav/")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT "http://marvelmind.com " STREQUAL " ")
@@ -110,7 +110,7 @@ if(NOT "/home/rohan/Documents/Project-Olly/ros_workspace/devel/include;/home/roh
         message(FATAL_ERROR "Project 'marvelmind_nav' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'marvelmind_nav' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/rohan/Documents/Project-Olly/ros_workspace/src/marvelmind_nav/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'marvelmind_nav' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/jasonanderson/ME102B_Project/ros_workspace/src/marvelmind_nav/${idir}'.  ${_report}")
     endif()
     _list_append_unique(marvelmind_nav_INCLUDE_DIRS ${include})
   endforeach()
@@ -129,7 +129,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/rohan/Documents/Project-Olly/ros_workspace/devel/lib;/home/rohan/Documents/Project-Olly/ros_workspace/devel/lib;/home/rohan/Documents/MPC-Work/barc/workspace/devel/lib;/opt/ros/kinetic/lib)
+    foreach(path /home/jasonanderson/ME102B_Project/ros_workspace/devel/lib;/home/jasonanderson/ME102B_Project/ros_workspace/devel/lib;/opt/ros/kinetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
