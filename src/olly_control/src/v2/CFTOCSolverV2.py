@@ -109,9 +109,10 @@ class CFTOCSolverV2:
                 self.m.Equation(self.X[i, t + 1] == temp[i])
 
         # path constraints
-        for n in range(path_constraints.shape[0]):
-            for t in range(N):
-                self.m.Equation(np.dot(path_constraints[n, 0:2], self.X[:, t]) + path_constraints[n, 2] <= 0)
+        if path_constraints is not None:
+            for n in range(path_constraints.shape[0]):
+                for t in range(N):
+                    self.m.Equation(np.dot(path_constraints[n, 0:2], self.X[:, t]) + path_constraints[n, 2] <= 0)
 
         # input constraints
         if umax is not None:

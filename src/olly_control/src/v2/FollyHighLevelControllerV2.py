@@ -1,8 +1,8 @@
 import numpy as np
 
-from importlib.machinery import SourceFileLoader
+import imp
 
-CFTOCSolverV2 = SourceFileLoader('CFTOCSolverV2', '../CFTOCSolverV2.py').load_module()
+CFTOCSolverV2 = imp.load_source('CFTOCSolverV2', '/home/jasonanderson/ME102B_Project/ros_workspace/src/olly_control/src/v2/CFTOCSolverV2.py')
 from CFTOCSolverV2 import CFTOCSolverV2
 
 

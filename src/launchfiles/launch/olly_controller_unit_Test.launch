@@ -1,0 +1,13 @@
+<launch>
+	<node name="folly_high_level_controller" pkg="olly_control" type="OllyHighLevelController.py" output="screen">
+		<rosparam param="step_time">0.1</rosparam>
+	</node>
+	
+	<!--
+	<node pkg="folly" type="" name="" output="screen">
+		<param name="drone" type="str" value="drone_2"/>
+		<rosparam param="position">[0,0,0,0,0,0]</rosparam>
+	</node>
+	-->
+
+</launch>
