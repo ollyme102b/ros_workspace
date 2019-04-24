@@ -1,6 +1,7 @@
 <launch>
-	<node name="folly_high_level_controller" pkg="olly_control" type="OllyHighLevelController.py" output="screen">
+	<node name="folly_high_level_controller" pkg="olly_control" type="FollyHighLevelController.py" output="screen">
 		<rosparam param="step_time">0.1</rosparam>
+		<rosparam param="object_length">1</rosparam>
 	</node>
 	
 	<!--

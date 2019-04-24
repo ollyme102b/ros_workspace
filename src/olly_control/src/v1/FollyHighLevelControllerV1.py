@@ -1,8 +1,12 @@
 import numpy as np
 
-from importlib.machinery import SourceFileLoader
-CFTOCSolverV1 = SourceFileLoader('CFTOCSolverV1','../CFTOCSolverV1.py').load_module()
-circleLineIntersectionPath = SourceFileLoader('circleLineIntersectionPath','../circleLineIntersectionPath.py').load_module()
+import imp
+
+CFTOCSolverV1 = imp.load_source('CFTOCSolverV1',
+                                '/home/jasonanderson/ME102B_Project/ros_workspace/src/olly_control/src/v1/CFTOCSolverV1.py')
+circleLineIntersectionPath = imp.load_source('circleLineIntersectionPath',
+                                             '/home/jasonanderson/ME102B_Project/ros_workspace/src/olly_control/src/v1/circleLineIntersectionPath.py')
+
 from CFTOCSolverV1 import CFTOCSolverV1
 from circleLineIntersectionPath import circle_line_intersection_path
 
@@ -12,14 +16,14 @@ class FollyHighLevelControllerV1:
     Folly High Level Controller Version 1
     """
 
-    def __init__(self, molly_initial_position,
-                 folly_initial_position,
-                 object_length,
-                 line_path_start_point,
-                 line_path_end_point,
-                 horizon,
-                 step_time,
-                 max_speed):
+    def __init__(self, molly_initial_position=np.zeros((2,)),
+                 folly_initial_position=np.zeros((2,)),
+                 object_length=1,
+                 line_path_start_point=np.array([0, 0]),
+                 line_path_end_point=np.array([1, 1]),
+                 horizon=10,
+                 step_time=0.1,
+                 max_speed=0.1):
         """
         Initialized controller
         :param molly_initial_position: molly initial position
@@ -62,7 +66,8 @@ class FollyHighLevelControllerV1:
                                                            )
         return np.array(folly_desired_path)
 
-    def optimal_input(self, current_molly_position, current_folly_position, current_molly_velocity):
+    def update_then_calculate_optimal_actuation(self, current_molly_position, current_folly_position,
+                                                current_molly_velocity):
         """
         calculates optimal input for controller
         :param current_molly_position: current molly position
