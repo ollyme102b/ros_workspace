@@ -20,11 +20,12 @@ class OllyController(object):
         self._controller_name = rospy.get_name()
         self._olly_name = self._controller_name[0:6]
 
-        params_dict = dict(step_time=None, object_length=None)
+        params_dict = dict(step_time=0.1, object_length=1, horizon=10)
         params = get_and_set_params(self._controller_name, params_dict)
 
         self._step_time = float(params['step_time'])
         self._object_length = float(params['step_time'])
+        self._horizon = int(params['horizon'])
 
         self._last_actuation_time = time.time()
 
@@ -42,8 +43,15 @@ class OllyController(object):
         self._last_actuation_time = time.time()
 
     def _assert_control(self):
+        if (time.time() - self._last_actuation_time) > self._step_time:
+            optimal_xy_velocity = self._compute_control_action()
+            self._command_cache.linear.x = optimal_xy_velocity[0]
+            self._command_cache.linear.y = optimal_xy_velocity[1]
+            self._publish_command()
+
+    def _compute_control_action(self):
         raise RuntimeError(
-            'Calling _assert_control method of abstract OllyController. OllyController must override this method')
+            'Calling _compute_control_action() of abstract OllyController. OllyController._compute_control_action() must have an override')
 
     def effectuate_control(self):
         try:
