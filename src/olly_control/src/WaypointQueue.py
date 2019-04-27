@@ -1,9 +1,13 @@
+#!/usr/bin/env python
+
 import numpy as np
 import rospy
 from geometry_msgs.msg import Pose
+import imp
 
-LaunchHelper = imp.load_source('LaunchHelper',
-                               '/home/jasonanderson/ME102B_Project/ros_workspace/src/LaunchHelper.py')
+ros_workspace_path = '/home/jasonanderson/ME102B_Project/ros_workspace'
+
+LaunchHelper = imp.load_source('LaunchHelper', ros_workspace_path + '/src/LaunchHelper.py')
 from LaunchHelper import get_and_set_params
 
 
@@ -37,7 +41,7 @@ class WaypointQueue:
         self._olly_position = np.array([message.position.x, message.position.y])
 
     def _waypoint_queue_callback(self, message):
-        self._append_waypoint(message.linear.x, message.linear.y)
+        self._append_waypoint(message.position.x, message.position.y)
 
     def _publish_waypoint(self):
         self._olly_setpoint_publisher.publish(self._olly_setpoint)
@@ -57,7 +61,8 @@ class WaypointQueue:
     def _assert_control(self):
         if len(self.queue) == 0:
             return
-        if np.linspace.norm(self._olly_position - self._olly_setpoint) < self._tolerance_radius:
+        if (self._olly_position.position.x ** 2 - self._olly_setpoint.position.x) ** 2 + (
+                self._olly_position.position.y ** 2 - self._olly_setpoint.position.y) ** 2 < self._tolerance_radius ** 2:
             self._publish_next_waypoint()
 
     def effectuate_queue(self):
@@ -65,7 +70,7 @@ class WaypointQueue:
             rate = rospy.Rate(1 / self._step_time)
 
             while not rospy.is_shutdown():
-                print("Main Loop executing for %s" % self._olly_name)
+                print("Main Loop executing for Waypoint Queue of %s" % self._olly_name)
                 self._assert_control()
                 rate.sleep()
 

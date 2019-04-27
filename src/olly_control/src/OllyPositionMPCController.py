@@ -4,8 +4,10 @@ import numpy as np
 import rospy
 import imp
 
+ros_workspace_path = '/home/jasonanderson/ME102B_Project/ros_workspace'
+
 PositionMPCController2D = imp.load_source('PositionMPCController2D',
-                                          '/home/jasonanderson/ME102B_Project/ros_workspace/src/olly_control/src/v0/PositionMPCController2D.py')
+                                          ros_workspace_path+'/src/olly_control/src/v0/PositionMPCController2D.py')
 
 from PositionMPCController2D import PositionMPCController2D
 from geometry_msgs.msg import Pose, Twist

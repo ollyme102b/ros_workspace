@@ -7,8 +7,9 @@ from geometry_msgs.msg import Pose, Twist
 
 import imp
 
-LaunchHelper = imp.load_source('LaunchHelper',
-                               '/home/jasonanderson/ME102B_Project/ros_workspace/src/LaunchHelper.py')
+ros_workspace_path = '/home/jasonanderson/ME102B_Project/ros_workspace'
+
+LaunchHelper = imp.load_source('LaunchHelper', ros_workspace_path+'/src/LaunchHelper.py')
 from LaunchHelper import get_and_set_params
 
 

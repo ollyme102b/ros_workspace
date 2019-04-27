@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 
 import numpy as np
-import time
 import rospy
 import imp
 
-FollyHighLevelControllerV1 = imp.load_source('FollyHighLevelControllerV1',
-                                             '/home/jasonanderson/ME102B_Project/ros_workspace/src/olly_control/src/v1/FollyHighLevelControllerV1.py')
-FollyHighLevelControllerV2 = imp.load_source('FollyHighLevelControllerV2',
-                                             '/home/jasonanderson/ME102B_Project/ros_workspace/src/olly_control/src/v2/FollyHighLevelControllerV2.py')
+ros_workspace_path = '/home/jasonanderson/ME102B_Project/ros_workspace'
+
+FollyHighLevelControllerV1 = imp.load_source('FollyHighLevelControllerV1', ros_workspace_path+'/src/olly_control/src/v1/FollyHighLevelControllerV1.py')
+FollyHighLevelControllerV2 = imp.load_source('FollyHighLevelControllerV2', ros_workspace_path+'/src/olly_control/src/v2/FollyHighLevelControllerV2.py')
 from FollyHighLevelControllerV1 import FollyHighLevelControllerV1
 from FollyHighLevelControllerV2 import FollyHighLevelControllerV2
 
