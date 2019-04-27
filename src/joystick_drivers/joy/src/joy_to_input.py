@@ -17,16 +17,17 @@ def run():
 		rate.sleep()
 	
 class Joystick:
-	def __init__(self):
+	def __init__(self, max_vel=0.3):
 		self.vx = 0		# linear x velocity
 		self.vy = 0		# linear y velocity
 		self.wz = 0		# angular z velocity
+		self.max_vel = max_vel
 
 	def callback(self, msg):
 		a = 1
-		self.vx = -(a*pow(msg.axes[0],3) + (1-a)*msg.axes[0])
-		self.vy = a*pow(msg.axes[1],3) + (1-a)*msg.axes[1]
-		self.wz = a*pow(msg.axes[3],3) + (1-a)*msg.axes[3]
+		self.vx = max_vel*(-(a*pow(msg.axes[0],3) + (1-a)*msg.axes[0]))
+		self.vy = max_vel*(a*pow(msg.axes[1],3) + (1-a)*msg.axes[1])
+		self.wz = max_vel*(a*pow(msg.axes[3],3) + (1-a)*msg.axes[3])
 
 	def get_twist(self):
 		t = Twist()
