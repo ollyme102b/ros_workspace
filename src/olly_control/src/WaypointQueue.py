@@ -4,10 +4,7 @@ import numpy as np
 import rospy
 from geometry_msgs.msg import Pose
 import imp
-
-ros_workspace_path = '/home/jasonanderson/ME102B_Project/ros_workspace'
-
-LaunchHelper = imp.load_source('LaunchHelper', ros_workspace_path + '/src/LaunchHelper.py')
+sys.path.append(sys.path[0].replace('/olly_control/src',''))
 from LaunchHelper import get_and_set_params
 
 

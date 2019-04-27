@@ -3,14 +3,12 @@
 import numpy as np
 import time
 import rospy
-from geometry_msgs.msg import Pose, Twist
+from geometry_msgs.msg import PoseStamped, Twist
 from tf.transformations import euler_from_quaternion
+import sys
+import os
 
-import imp
-
-ros_workspace_path = '/home/jasonanderson/ME102B_Project/ros_workspace'
-
-LaunchHelper = imp.load_source('LaunchHelper', ros_workspace_path + '/src/LaunchHelper.py')
+sys.path.append(sys.path[0].replace('/olly_control/src',''))
 from LaunchHelper import get_and_set_params
 
 
@@ -41,19 +39,21 @@ class OllyController(object):
         # initialize position array and create ROS subscriber
         self._position = np.zeros((2,))
         self._yaw = 0
-        self._position_subscriber = rospy.Subscriber('/' + self._olly_name + "/position", Pose, self._position_callback)
+        self._position_subscriber = rospy.Subscriber('/' + self._olly_name + "/position", PoseStamped, self._position_callback)
 
         # initialize command cache and create ROS publisher
         self._command_cache = Twist()
-        self._command_publisher = rospy.Publisher('/' + self._olly_name + "/velocity_command", Twist, queue_size=1)
+        self._command_publisher = rospy.Publisher('/' + self._olly_name + "/velocity_cmd", Twist, queue_size=1)
 
     def _position_callback(self, message):
         """
         position ROS call back function
         :param message: of ROS message type Pose
         """
-        self._position = np.array([message.position.x, message.position.y])
-        self._yaw = euler_from_quaternion(message.orientation.Quaternion)[2]
+        self._position = np.array([message.pose.position.x, message.pose.position.y])
+        orientation = message.pose.orientation
+        quaternion = [orientation.w, orientation.x, orientation.y, orientation.z]
+        self._yaw = euler_from_quaternion(quaternion)[2]
 
     def _publish_command(self):
         """
@@ -92,9 +92,8 @@ class OllyController(object):
         """
         try:
             rate = rospy.Rate(1 / self._step_time)
-
+            print("Main Loop executing for %s" % self._controller_name)
             while not rospy.is_shutdown():
-                print("Main Loop executing for %s" % self._controller_name)
                 self._assert_control()
                 rate.sleep()
 

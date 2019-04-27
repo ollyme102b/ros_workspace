@@ -3,14 +3,10 @@
 import numpy as np
 import rospy
 import imp
+import sys
+import os
 
-ros_workspace_path = '/home/jasonanderson/ME102B_Project/ros_workspace'
-
-FollyHighLevelControllerV1 = imp.load_source('FollyHighLevelControllerV1', ros_workspace_path+'/src/olly_control/src/v1/FollyHighLevelControllerV1.py')
-FollyHighLevelControllerV2 = imp.load_source('FollyHighLevelControllerV2', ros_workspace_path+'/src/olly_control/src/v2/FollyHighLevelControllerV2.py')
-from FollyHighLevelControllerV1 import FollyHighLevelControllerV1
-from FollyHighLevelControllerV2 import FollyHighLevelControllerV2
-
+sys.path.append(sys.path[0]+'/v0')
 # useful ROS message types
 from geometry_msgs.msg import Pose, Twist
 
