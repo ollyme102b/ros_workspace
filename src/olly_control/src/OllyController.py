@@ -4,12 +4,13 @@ import numpy as np
 import time
 import rospy
 from geometry_msgs.msg import Pose, Twist
+from tf.transformations import euler_from_quaternion
 
 import imp
 
 ros_workspace_path = '/home/jasonanderson/ME102B_Project/ros_workspace'
 
-LaunchHelper = imp.load_source('LaunchHelper', ros_workspace_path+'/src/LaunchHelper.py')
+LaunchHelper = imp.load_source('LaunchHelper', ros_workspace_path + '/src/LaunchHelper.py')
 from LaunchHelper import get_and_set_params
 
 
@@ -39,6 +40,7 @@ class OllyController(object):
 
         # initialize position array and create ROS subscriber
         self._position = np.zeros((2,))
+        self._yaw = 0
         self._position_subscriber = rospy.Subscriber('/' + self._olly_name + "/position", Pose, self._position_callback)
 
         # initialize command cache and create ROS publisher
@@ -51,6 +53,7 @@ class OllyController(object):
         :param message: of ROS message type Pose
         """
         self._position = np.array([message.position.x, message.position.y])
+        self._yaw = euler_from_quaternion(message.orientation.Quaternion)[2]
 
     def _publish_command(self):
         """
@@ -75,6 +78,13 @@ class OllyController(object):
         """
         raise RuntimeError(
             'Calling _compute_control_action() of abstract OllyController. OllyController._compute_control_action() must have an override')
+
+    def _inertial_to_body(self, xi, yi):
+
+        xb = np.cos(self._yaw) * xi - np.sin(self._yaw) * yi
+        yb = np.sin(self._yaw) * xi + np.cos(self._yaw) * yi
+
+        return xb, yb
 
     def effectuate_control(self):
         """
