@@ -16,7 +16,7 @@
 
     <node machine="pc" name="molly_position_MPC_controller" pkg="olly_control" type="OllyPositionMPCController.py" output="screen">
 		<rosparam param="olly_name">"molly"</rosparam>
-		<rosparam param="step_time">0.1</rosparam>
+		<rosparam param="step_time">0.5</rosparam>
 		<rosparam param="object_length">1</rosparam>
 		<rosparam param="horizon">10</rosparam>
 	</node>

@@ -68,8 +68,9 @@ class OllyController(object):
         """
         if (time.time() - self._last_actuation_time) >= self._step_time:
             optimal_xy_velocity = self._compute_control_action()
-            self._command_cache.linear.x = optimal_xy_velocity[0]
-            self._command_cache.linear.y = optimal_xy_velocity[1]
+            xb, yb = self._inertial_to_body(optimal_xy_velocity[0], optimal_xy_velocity[1])
+            self._command_cache.linear.x = xb
+            self._command_cache.linear.y = yb
             self._publish_command()
 
     def _compute_control_action(self):
