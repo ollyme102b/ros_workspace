@@ -23,7 +23,7 @@ class OllyPositionMPCController(OllyController):
 
         # initialize position set point and create ROS subscriber
         self._position_set_point = np.zeros((2,))
-        self._position_set_point_subscriber = rospy.Subscriber('/' + self._olly_name + "/position_set_point",
+        self._position_set_point_subscriber = rospy.Subscriber('/' + self._olly_name + "/position_setpoint",
                                                                Pose,
                                                                self._position_set_point_callback)
 
