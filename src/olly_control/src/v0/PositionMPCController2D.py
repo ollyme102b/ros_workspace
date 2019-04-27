@@ -3,7 +3,6 @@ import numpy as np
 import imp
 from CFTOCSolverV0 import CFTOCSolverV0
 
-
 class PositionMPCController2D:
     """
     Basic 2D Position MPC Controller
