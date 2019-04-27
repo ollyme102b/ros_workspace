@@ -19,8 +19,8 @@ class PositionMPCController2D:
         self._horizon = horizon
         self._step_time = step_time
 
-        A = np.eye(2)  # state dynamics
-        B = step_time * np.eye(2)  # input velocity dynamics
+        A = np.eye(3)  # state dynamics
+        B = step_time * np.eye(3)  # input velocity dynamics
 
         self.optimizer = CFTOCSolverV0(A, B, olly_initial_position, olly_initial_position, horizon, max_speed)
 

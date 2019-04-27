@@ -71,6 +71,7 @@ class OllyController(object):
             xb, yb = self._inertial_to_body(optimal_xy_velocity[0], optimal_xy_velocity[1])
             self._command_cache.linear.x = xb
             self._command_cache.linear.y = yb
+            self._command_cache.angular.z = optimal_xy_velocity[2]
             self._publish_command()
 
     def _compute_control_action(self):
