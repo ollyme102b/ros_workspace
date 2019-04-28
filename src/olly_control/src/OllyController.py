@@ -37,8 +37,7 @@ class OllyController(object):
         self._last_actuation_time = time.time()  # set first actuation time
 
         # initialize position array and create ROS subscriber
-        self._position = np.zeros((2,))
-        self._yaw = 0
+        self._position = np.zeros((3,))
         self._position_subscriber = rospy.Subscriber('/' + self._olly_name + "/position", PoseStamped, self._position_callback)
 
         # initialize command cache and create ROS publisher
@@ -50,10 +49,11 @@ class OllyController(object):
         position ROS call back function
         :param message: of ROS message type Pose
         """
-        self._position = np.array([message.pose.position.x, message.pose.position.y])
         orientation = message.pose.orientation
         quaternion = [orientation.w, orientation.x, orientation.y, orientation.z]
-        self._yaw = euler_from_quaternion(quaternion)[2]
+        yaw = euler_from_quaternion(quaternion)[2]
+        self._position = np.array([message.pose.position.x, message.pose.position.y, yaw])
+
 
     def _publish_command(self):
         """
@@ -82,9 +82,9 @@ class OllyController(object):
             'Calling _compute_control_action() of abstract OllyController. OllyController._compute_control_action() must have an override')
 
     def _inertial_to_body(self, xi, yi):
-
-        xb = np.cos(self._yaw) * xi - np.sin(self._yaw) * yi
-        yb = np.sin(self._yaw) * xi + np.cos(self._yaw) * yi
+        yaw = self._position[2]
+        xb = np.cos(yaw) * xi - np.sin(yaw) * yi
+        yb = np.sin(yaw) * xi + np.cos(yaw) * yi
 
         return xb, yb
 
