@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-import numpy as np
+import numpy as np 
 import rospy
-from geometry_msgs.msg import Pose
-import imp
+from geometry_msgs.msg import Pose, PoseStamped
+import sys
 sys.path.append(sys.path[0].replace('/olly_control/src',''))
 from LaunchHelper import get_and_set_params
 
@@ -27,15 +27,15 @@ class WaypointQueue:
         self._olly_setpoint_publisher = rospy.Publisher('/' + self._olly_name + "/position_setpoint", Pose,
                                                         queue_size=1)
 
-        self._olly_position = Pose()
+        self._olly_position = PoseStamped()
         self._olly_position_subscriber = self._position_subscriber = rospy.Subscriber(
-            '/' + self._olly_name + "/position", Pose, self._position_callback)
+            '/' + self._olly_name + "/position", PoseStamped, self._position_callback)
 
         self._olly_waypoint_subscriber = self._position_subscriber = rospy.Subscriber(
             '/' + self._olly_name + "/waypoint_queue", Pose, self._waypoint_queue_callback)
 
     def _position_callback(self, message):
-        self._olly_position = np.array([message.position.x, message.position.y])
+        self._olly_position = message
 
     def _waypoint_queue_callback(self, message):
         self._append_waypoint(message.position.x, message.position.y)
@@ -58,16 +58,15 @@ class WaypointQueue:
     def _assert_control(self):
         if len(self.queue) == 0:
             return
-        if (self._olly_position.position.x ** 2 - self._olly_setpoint.position.x) ** 2 + (
-                self._olly_position.position.y ** 2 - self._olly_setpoint.position.y) ** 2 < self._tolerance_radius ** 2:
+        if (self._olly_position.pose.position.x ** 2 - self._olly_setpoint.position.x) ** 2 + (
+                self._olly_position.pose.position.y ** 2 - self._olly_setpoint.position.y) ** 2 < self._tolerance_radius ** 2:
             self._publish_next_waypoint()
 
     def effectuate_queue(self):
         try:
             rate = rospy.Rate(1 / self._step_time)
-
+            print("Main Loop executing for Waypoint Queue of %s" % self._olly_name)
             while not rospy.is_shutdown():
-                print("Main Loop executing for Waypoint Queue of %s" % self._olly_name)
                 self._assert_control()
                 rate.sleep()
 
