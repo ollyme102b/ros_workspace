@@ -8,7 +8,7 @@ class PositionMPCController2D:
     Basic 2D Position MPC Controller
     """
 
-    def __init__(self, olly_initial_position=np.zeros((2,)), horizon=10, step_time=0.1, max_speed=0.2):
+    def __init__(self, olly_initial_position=np.zeros((3,)), horizon=10, step_time=0.1, max_speed=0.2):
         """
         Initialized controller
         :param olly_initial_position: olly initial position
@@ -19,8 +19,8 @@ class PositionMPCController2D:
         self._horizon = horizon
         self._step_time = step_time
 
-        A = np.eye(2)  # state dynamics
-        B = step_time * np.eye(2)  # input velocity dynamics
+        A = np.eye(3)  # state dynamics
+        B = step_time * np.eye(3)  # input velocity dynamics
 
         self.optimizer = CFTOCSolverV0(A, B, olly_initial_position, olly_initial_position, horizon, max_speed)
 

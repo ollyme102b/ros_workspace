@@ -19,7 +19,7 @@ class OllyPositionMPCController(OllyController):
         super(OllyPositionMPCController, self).__init__()
 
         # initialize position set point and create ROS subscriber
-        self._position_set_point = np.zeros((2,))
+        self._position_set_point = np.zeros((3,))
         self._position_set_point_subscriber = rospy.Subscriber('/' + self._olly_name + "/position_setpoint",
                                                                Pose,
                                                                self._position_set_point_callback)
@@ -32,7 +32,7 @@ class OllyPositionMPCController(OllyController):
         position set point ROS call back function
         :param message: of ROS message type Pose
         """
-        self._position_set_point = np.array([message.position.x, message.position.y])
+        self._position_set_point = np.array([message.position.x, message.position.y, 0])  ### only actuates 0 yaw
 
     def _compute_control_action(self):
         """
