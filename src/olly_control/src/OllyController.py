@@ -20,6 +20,7 @@ class OllyController(object):
 
     def __init__(self):
         rospy.init_node('orphaned_olly_controller')  # initialize ROS node
+        rospy.on_shutdown(self._shutdown)
 
         self._controller_name = rospy.get_name()
 
@@ -86,6 +87,10 @@ class OllyController(object):
         yb = np.sin(self._yaw) * xi + np.cos(self._yaw) * yi
 
         return xb, yb
+
+    def _shutdown(self):
+        self._command_cache = Twist()
+        self._publish_command()
 
     def effectuate_control(self):
         """
