@@ -20,7 +20,12 @@
 		<rosparam param="object_length">1</rosparam>
 		<rosparam param="horizon">10</rosparam>
 	</node>
-	
+
+	<node name="molly_waypoint_queue" pkg="olly_control" type="WaypointQueue.py" output="screen">
+		<rosparam param="olly_name">"molly"</rosparam>
+		<rosparam param="step_time">1</rosparam>
+		<rosparam param="tolerance_radius">0.02</rosparam>
+	</node>
     <!-- #############Lidar Nodes!############## -->
 
     <node machine="olly" name="rplidarNode" pkg="rplidar_ros"  type="rplidarNode" output="screen">
