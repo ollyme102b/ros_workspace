@@ -32,7 +32,7 @@ class OllyPositionMPCController(OllyController):
         position set point ROS call back function
         :param message: of ROS message type Pose
         """
-        self._position_set_point = np.array([message.position.x, message.position.y, 0])  ### only actuates 0 yaw
+        self._position_set_point = np.array([message.position.x, message.position.y, message.orientation.z])  ### only actuates 0 yaw
 
     def _compute_control_action(self):
         """

@@ -51,7 +51,7 @@ class OllyController(object):
         :param message: of ROS message type Pose
         """
         orientation = message.pose.orientation
-        quaternion = [orientation.w, orientation.x, orientation.y, orientation.z]
+        quaternion = [orientation.x, orientation.y, orientation.z, orientation.w]
         yaw = euler_from_quaternion(quaternion)[2]
         self._position = np.array([message.pose.position.x, message.pose.position.y, yaw])
 
