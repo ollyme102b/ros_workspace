@@ -12,13 +12,13 @@
 		<rosparam param="object_length">1</rosparam>
 		<rosparam param="horizon">10</rosparam>
 	</node>
-<!-- 	
+	
 	<node name="molly_waypoint_queue" pkg="olly_control" type="WaypointQueue.py" output="screen">
 		<rosparam param="olly_name">"molly"</rosparam>
 		<rosparam param="step_time">1</rosparam>
 		<rosparam param="tolerance_radius">0.02</rosparam>
 	</node>
- -->
+ 
 	<!--
 	<node pkg="folly" type="" name="" output="screen">
 		<param name="drone" type="str" value="drone_2"/>
