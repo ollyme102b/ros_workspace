@@ -1,16 +1,16 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import time
+import sys
 
-from importlib.machinery import SourceFileLoader
-FollyHighLevelControllerV1 = SourceFileLoader('FollyHighLevelControllerV1', '../FollyHighLevelControllerV1.py').load_module()
+sys.path.append('../')
 from FollyHighLevelControllerV1 import FollyHighLevelControllerV1
 
 # Initialize Molly position
 molly_position = np.array([-4, -8])
 
 # Initialize Folly position
-folly_position = np.array([-2, -7.5])
+folly_position = np.array([-2, -7.5, 0])
 
 # object length
 object_length = 2
@@ -44,7 +44,7 @@ prev_time = time.time()  # time iteration for real time plot
 new_time = time.time()
 plt.show(block=False)
 for t in range(T):
-    load_length_deviation = np.linalg.norm(folly_position - molly_position) - object_length
+    load_length_deviation = np.linalg.norm(folly_position[0:2] - molly_position) - object_length
     deviation += np.abs(load_length_deviation)
 
     plt.clf()
@@ -59,9 +59,9 @@ for t in range(T):
     plt.title('Folly High Level Controller V1 {0}/{1}'.format(t, T))
     plt.xlabel('[m]')
     plt.ylabel('[m]')
-    
+
     plt.pause(0.01)
-    time.sleep(np.maximum(dt - (new_time - prev_time), 0.01)) # pause to match real time
+    time.sleep(np.maximum(dt - (new_time - prev_time), 0.01))  # pause to match real time
     prev_time = new_time
     new_time = time.time()
 
@@ -69,9 +69,10 @@ for t in range(T):
     molly_position = molly_position + dt * molly_velocity_command + dt * np.random.normal(0, sigma, 2)
 
     # compute folly command
-    folly_velocity_command = follyHLC.optimal_input(molly_position, folly_position, molly_velocity_command)
+    folly_velocity_command = follyHLC.update_then_calculate_optimal_actuation(molly_position, folly_position,
+                                                                              molly_velocity_command)
 
     # actuate optimal command with noise
-    folly_position = folly_position + dt * folly_velocity_command + dt * np.random.normal(0, sigma, 2)
+    folly_position = folly_position + dt * folly_velocity_command + dt * np.random.normal(0, sigma, 3)
 
-print('The average deviation was {:.1f}cm.'.format(deviation/T*100))
+print('The average deviation was {:.1f}cm.'.format(deviation / T * 100))

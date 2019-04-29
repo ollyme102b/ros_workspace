@@ -1,12 +1,4 @@
 import numpy as np
-
-import imp
-
-CFTOCSolverV1 = imp.load_source('CFTOCSolverV1',
-                                '/home/jasonanderson/ME102B_Project/ros_workspace/src/olly_control/src/v1/CFTOCSolverV1.py')
-circleLineIntersectionPath = imp.load_source('circleLineIntersectionPath',
-                                             '/home/jasonanderson/ME102B_Project/ros_workspace/src/olly_control/src/v1/circleLineIntersectionPath.py')
-
 from CFTOCSolverV1 import CFTOCSolverV1
 from circleLineIntersectionPath import circle_line_intersection_path
 
@@ -17,7 +9,7 @@ class FollyHighLevelControllerV1:
     """
 
     def __init__(self, molly_initial_position=np.zeros((2,)),
-                 folly_initial_position=np.zeros((2,)),
+                 folly_initial_position=np.zeros((3,)),
                  object_length=1,
                  line_path_start_point=np.array([0, 0]),
                  line_path_end_point=np.array([1, 1]),
@@ -41,10 +33,11 @@ class FollyHighLevelControllerV1:
         self._horizon = horizon
         self._step_time = step_time
 
-        folly_desired_path = self._desired_path(molly_initial_position, folly_initial_position, np.zeros((2,)))
+        folly_desired_path = np.zeros((3, self._horizon))
+        folly_desired_path[0:2, :] = self._desired_path(molly_initial_position, folly_initial_position, np.zeros((2,)))
 
-        A = np.eye(2)  # state dynamics
-        B = step_time * np.eye(2)  # input velocity dynamics
+        A = np.eye(3)  # state dynamics
+        B = step_time * np.eye(3)  # input velocity dynamics
 
         self.optimizer = CFTOCSolverV1(A, B, folly_initial_position, folly_desired_path, horizon, max_speed)
 
@@ -75,5 +68,7 @@ class FollyHighLevelControllerV1:
         :param current_molly_velocity: current molly velocity
         :return: optimal velocity command
         """
-        folly_desired_path = self._desired_path(current_molly_position, current_folly_position, current_molly_velocity)
+        folly_desired_path = np.zeros((3, self._horizon))  ###### SETS A ZERO YAW POSITION SET POINT
+        folly_desired_path[0:2, :] = self._desired_path(current_molly_position, current_folly_position[0:2],
+                                                        current_molly_velocity)
         return self.optimizer.calculate_optimal_actuation(current_folly_position, folly_desired_path)
