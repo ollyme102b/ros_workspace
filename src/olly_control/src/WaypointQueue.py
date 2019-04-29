@@ -58,8 +58,9 @@ class WaypointQueue:
     def _assert_control(self):
         if len(self.queue) == 0:
             return
-        if (self._olly_position.pose.position.x ** 2 - self._olly_setpoint.position.x) ** 2 + (
-                self._olly_position.pose.position.y ** 2 - self._olly_setpoint.position.y) ** 2 < self._tolerance_radius ** 2:
+        distance = (self._olly_position.pose.position.x - self._olly_setpoint.position.x) ** 2 + (
+                self._olly_position.pose.position.y - self._olly_setpoint.position.y) ** 2
+        if distance < self._tolerance_radius ** 2:
             self._publish_next_waypoint()
 
     def effectuate_queue(self):
