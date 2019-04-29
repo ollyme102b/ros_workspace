@@ -47,7 +47,7 @@ class CFTOCSolverV2:
         :return: optimal actuation value
         """
         self.m.solve(disp=False)
-        return np.array([self.U[0, 0].value, self.U[1, 0].value]).flatten()
+        return np.array([self.U[0, 0].value, self.U[1, 0].value, self.U[2, 0].value]).flatten()
 
     def status(self):
         """
@@ -112,7 +112,7 @@ class CFTOCSolverV2:
         if path_constraints is not None:
             for n in range(path_constraints.shape[0]):
                 for t in range(N):
-                    self.m.Equation(np.dot(path_constraints[n, 0:2], self.X[:, t]) + path_constraints[n, 2] <= 0)
+                    self.m.Equation(np.dot(path_constraints[n, 0:2], self.X[0:2, t]) + path_constraints[n, 2] <= 0)
 
         # input constraints
         if umax is not None:

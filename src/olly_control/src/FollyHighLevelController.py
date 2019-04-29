@@ -6,7 +6,8 @@ import imp
 import sys
 import os
 
-sys.path.append(sys.path[0]+'/v0')
+sys.path.append(sys.path[0]+'/v1')
+sys.path.append(sys.path[0]+'/v2')
 # useful ROS message types
 from geometry_msgs.msg import Pose, Twist
 

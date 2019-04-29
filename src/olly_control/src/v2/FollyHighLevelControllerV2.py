@@ -1,8 +1,4 @@
 import numpy as np
-
-import imp
-
-CFTOCSolverV2 = imp.load_source('CFTOCSolverV2', '/home/jasonanderson/ME102B_Project/ros_workspace/src/olly_control/src/v2/CFTOCSolverV2.py')
 from CFTOCSolverV2 import CFTOCSolverV2
 
 
@@ -12,7 +8,7 @@ class FollyHighLevelControllerV2:
     """
 
     def __init__(self, molly_initial_position=np.zeros((2,)),
-                 folly_initial_position=np.zeros((2,)),
+                 folly_initial_position=np.zeros((3,)),
                  object_length=1,
                  path_constraints=None,
                  horizon=10,
@@ -35,8 +31,8 @@ class FollyHighLevelControllerV2:
 
         molly_expected_path = self._molly_expected_path(molly_initial_position, np.zeros((2,)))
 
-        A = np.eye(2)  # state dynamics
-        B = step_time * np.eye(2)  # input velocity dynamics
+        A = np.eye(3)  # state dynamics
+        B = step_time * np.eye(3)  # input velocity dynamics
 
         self.optimizer = CFTOCSolverV2(A, B, folly_initial_position, molly_expected_path, horizon, max_speed,
                                        object_length, path_constraints)
@@ -48,10 +44,11 @@ class FollyHighLevelControllerV2:
         :param molly_velocity: current molly velocity
         :return: folly desired path
         """
-        molly_expected_path = np.zeros((2, self._horizon))
+        ############## COMMANDS A ZERO YAW ANGLE
+        molly_expected_path = np.zeros((3, self._horizon))
 
         for t in range(self._horizon):
-            molly_expected_path[:, t] = self._step_time * (t + 1) * molly_velocity + molly_position
+            molly_expected_path[0:2, t] = self._step_time * (t + 1) * molly_velocity + molly_position
 
         return molly_expected_path
 
