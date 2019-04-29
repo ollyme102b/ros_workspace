@@ -87,7 +87,7 @@ class CFTOCSolverV0:
 
         # state cost
         for t in range(1, N + 1):
-            cost += 2 * cvxpy.sum_squares(self.X[:, t] - self.xbar)
+            cost +=  cvxpy.sum_squares(self.X[:, t] - self.xbar)
 
         # input cost
         for t in range(N):
