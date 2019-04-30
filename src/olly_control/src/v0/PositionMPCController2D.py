@@ -8,7 +8,7 @@ class PositionMPCController2D:
     Basic 2D Position MPC Controller
     """
 
-    def __init__(self, olly_initial_position=np.zeros((3,)), horizon=10, step_time=0.1, max_speed=0.2):
+    def __init__(self, olly_initial_position=np.zeros((3,)), horizon=10, step_time=0.1, max_speed=0.2/3):
         """
         Initialized controller
         :param olly_initial_position: olly initial position
