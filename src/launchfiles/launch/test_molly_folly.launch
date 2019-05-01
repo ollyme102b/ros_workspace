@@ -1,0 +1,192 @@
+<launch>
+	<!-- Some random parameters for Slam-->
+
+	<arg name="geotiff_map_file_path" default="$(find hector_geotiff)/maps"/>
+	<param name="/use_sim_time" value="false"/>
+	
+	<!-- Machine and Network Definitions -->
+
+	<machine name="pc" address="10.42.0.187" user="rohan" timeout="20.0" env-loader="/home/rohan/Documents/Project-Olly/ros_workspace/local_env_loader.sh"/>
+	<machine name="folly" address="10.42.0.1" user="ubuntu" timeout="20.0" env-loader="/home/ubuntu/Project_Olly/ros_workspace/folly_env_loader.sh"/>
+	<machine name="molly" address="10.42.0.29" user="ubuntu" timeout="20.0" env-loader="/home/ubuntu/Project_Olly/ros_workspace/molly_env_loader.sh"/>
+
+	<!-- Arduino Nodes -->
+
+	<!--  <node machine="folly" pkg="rosserial_python" type="serial_node.py" name="folly_arduino" >
+        <param name="port" value="/dev/ttyUSBlidar" />
+        <remap from="/velocity_cmd" to="/folly/velocity_cmd"/>
+    </node> -->
+
+  <!--   <node machine="molly" pkg="rosserial_python" type="serial_node.py" name="molly_arduino" >
+        <param name="port" value="/dev/ttyUSB1" />
+        <remap from="/velocity_cmd" to="/molly/velocity_cmd"/>
+    </node> -->
+
+    <!-- Lidar Nodes -->
+
+    <node machine="folly"  pkg="rplidar_ros"  type="rplidarNode" output="screen" name="folly_lidar">
+		<param name="serial_port"         type="string" value="/dev/ttyUSBarduino"/>
+		<param name="serial_baudrate"     type="int"    value="115200"/>
+		<param name="frame_id"            type="string" value="folly_laser"/>
+		<param name="inverted"            type="bool"   value="false"/>
+		<param name="angle_compensate"    type="bool"   value="true"/>
+
+		<remap from="/scan"		to="/folly/scan"/>
+	</node>
+
+    <node machine="molly"  pkg="rplidar_ros"  type="rplidarNode" output="screen" name="molly_lidar">
+		<param name="serial_port"         type="string" value="/dev/ttyUSB1"/>
+		<param name="serial_baudrate"     type="int"    value="115200"/>
+		<param name="frame_id"            type="string" value="molly_laser"/>
+		<param name="inverted"            type="bool"   value="false"/>
+		<param name="angle_compensate"    type="bool"   value="true"/>
+
+		<remap from="/scan"		to="/molly/scan"/>
+	</node>
+
+	<!-- Slam Transforms -->
+
+	<node machine = "pc" pkg="tf" type="static_transform_publisher" name="folly_base_to_laser_broadcaster" args="-.15 0 0 0 0 0 folly_base_frame folly_laser 100" />
+
+	<node machine = "pc" pkg="tf" type="static_transform_publisher" name="molly_base_to_laser_broadcaster" args="-.15 0 0 0 0 0 molly_base_frame molly_laser 100" />
+
+	<node machine = "pc" pkg="tf" type="static_transform_publisher" name="molly_to_folly_broadcaster" args="-1.5 0 0 0 0 0 molly_map folly_map 100" />
+
+	<!-- Hector Mapping Nodes -->
+
+	<arg name="tf_map_scanmatch_transform_frame_name" default="scanmatcher_frame"/>
+	<arg name="pub_map_odom_transform" default="true"/>
+	<arg name="scan_subscriber_queue_size" default="5"/>
+	<arg name="map_size" default="2048"/>
+
+	<node machine ="pc" pkg="hector_mapping" type="hector_mapping" name="folly_hector_mapping" output="screen">
+	    
+	    <!-- Frame names -->
+	    <param name="map_frame" value="folly_map" />
+	    <param name="base_frame" value="folly_base_frame" />
+	    <param name="odom_frame" value="folly_base_frame" />
+	    
+	    <!-- Tf use -->
+	    <param name="use_tf_scan_transformation" value="true"/>
+	    <param name="use_tf_pose_start_estimate" value="false"/>
+	    <param name="pub_map_odom_transform" value="true"/>
+	    
+	    <!-- Map size / start point -->
+	    <param name="map_resolution" value="0.050"/>
+	    <param name="map_size" value="$(arg map_size)"/>
+	    <param name="map_start_x" value="0.5"/>
+	    <param name="map_start_y" value="0.5" />
+	    <param name="map_multi_res_levels" value="2" />
+	    
+	    <!-- Map update parameters -->
+	    <param name="update_factor_free" value="0.4"/>
+	    <param name="update_factor_occupied" value="0.9" />    
+	    <param name="map_update_distance_thresh" value="0.4"/>
+	    <param name="map_update_angle_thresh" value="0.06" />
+	    <param name="laser_z_min_value" value = "-1.0" />
+	    <param name="laser_z_max_value" value = "1.0" />
+	    
+	    <!-- Advertising config --> 
+	    <param name="advertise_map_service" value="true"/>
+	    
+	    <param name="scan_subscriber_queue_size" value="$(arg scan_subscriber_queue_size)"/>
+	    <param name="scan_topic" value="/folly/scan"/>
+	    <param name="tf_map_scanmatch_transform_frame_name" value="folly_scanmatcher_frame"/>
+
+	    <remap from="/initialpose" 	to="/folly/initialpose"/>
+	    <remap from="/scan" 		to="/folly/scan"/>
+	    <remap from="/map" 			to="/folly/map"/>
+	    <remap from="/map_metadata" to="/folly/map_metadata"/>
+	    <remap from="/poseupdate" 	to="/folly/poseupdate"/>
+	    <remap from="/slam_cloud" 	to="/folly/slam_cloud"/>
+	    <remap from="/dynamic_map" 	to="/folly/dynamic_map"/>
+	    <remap from="/slam_out_pose" to="folly/position"/>
+	</node>
+
+	<node machine ="pc" pkg="hector_mapping" type="hector_mapping" name="molly_hector_mapping" output="screen">
+	    
+	    <!-- Frame names -->
+	    <param name="map_frame" value="molly_map" />
+	    <param name="base_frame" value="molly_base_frame" />
+	    <param name="odom_frame" value="molly_base_frame" />
+	    
+	    <!-- Tf use -->
+	    <param name="use_tf_scan_transformation" value="true"/>
+	    <param name="use_tf_pose_start_estimate" value="false"/>
+	    <param name="pub_map_odom_transform" value="true"/>
+	    
+	    <!-- Map size / start point -->
+	    <param name="map_resolution" value="0.050"/>
+	    <param name="map_size" value="$(arg map_size)"/>
+	    <param name="map_start_x" value="0.5"/>
+	    <param name="map_start_y" value="0.5" />
+	    <param name="map_multi_res_levels" value="2" />
+	    
+	    <!-- Map update parameters -->
+	    <param name="update_factor_free" value="0.4"/>
+	    <param name="update_factor_occupied" value="0.9" />    
+	    <param name="map_update_distance_thresh" value="0.4"/>
+	    <param name="map_update_angle_thresh" value="0.06" />
+	    <param name="laser_z_min_value" value = "-1.0" />
+	    <param name="laser_z_max_value" value = "1.0" />
+	    
+	    <!-- Advertising config --> 
+	    <param name="advertise_map_service" value="true"/>
+	    <param name="scan_subscriber_queue_size" value="$(arg scan_subscriber_queue_size)"/>
+	    <param name="scan_topic" value="/molly/scan"/>
+	    <param name="tf_map_scanmatch_transform_frame_name" value="molly_scanmatcher_frame"/>
+
+	    <remap from="/initialpose" 	to="/molly/initialpose"/>
+	    <remap from="/scan" 		to="/molly/scan"/>
+	    <remap from="/map" 			to="/molly/map"/>
+	    <remap from="/map_metadata" to="/molly/map_metadata"/>
+	    <remap from="/poseupdate" 	to="/molly/poseupdate"/>
+	    <remap from="/slam_cloud" 	to="/molly/slam_cloud"/>
+	    <remap from="/dynamic_map" 	to="/molly/dynamic_map"/>
+	    <remap from="/slam_out_pose" to="/molly/position"/>
+	</node>
+
+
+  <!-- Hector Geotiff Mapping Nodes -->
+	<arg name="trajectory_update_rate" default="4"/>
+	<arg name="trajectory_publish_rate" default="0.25"/>
+	<arg name="map_file_path" default="$(find hector_geotiff)/maps"/>
+
+	<node machine ="pc" pkg="hector_trajectory_server" type="hector_trajectory_server" name="folly_hector_trajectory_server" output="screen">
+		<param name="target_frame_name" type="string" value="/folly_map" />
+		<param name="source_frame_name" type="string" value="/folly_scanmatcher_frame" />
+		<param name="trajectory_update_rate" type="double" value="$(arg trajectory_update_rate)" />
+		<param name="trajectory_publish_rate" type="double" value="$(arg trajectory_publish_rate)" />
+	</node>
+
+	<node machine ="pc" pkg="hector_geotiff" type="geotiff_node" name="folly_hector_geotiff_node" output="screen" launch-prefix="nice -n 15">
+		<remap from="map" to="/folly/dynamic_map" />
+		<param name="map_file_path" type="string" value="$(arg map_file_path)" />
+		<param name="map_file_base_name" type="string" value="folly_hector_slam_map" />
+		<param name="geotiff_save_period" type="double" value="0" />
+		<param name="draw_background_checkerboard" type="bool" value="true" />
+		<param name="draw_free_space_grid" type="bool" value="true" />
+		<param name="plugins" type="string" value="hector_geotiff_plugins/TrajectoryMapWriter" />
+	</node>
+
+	<node machine ="pc" pkg="hector_trajectory_server" type="hector_trajectory_server" name="molly_hector_trajectory_server" output="screen">
+		<param name="target_frame_name" type="string" value="/molly_map" />
+		<param name="source_frame_name" type="string" value="/molly_scanmatcher_frame" />
+		<param name="trajectory_update_rate" type="double" value="$(arg trajectory_update_rate)" />
+		<param name="trajectory_publish_rate" type="double" value="$(arg trajectory_publish_rate)" />
+	</node>
+
+	<node machine ="pc" pkg="hector_geotiff" type="geotiff_node" name="molly_hector_geotiff_node" output="screen" launch-prefix="nice -n 15">
+		<remap from="map" to="/molly/dynamic_map" />
+		<param name="map_file_path" type="string" value="$(arg map_file_path)" />
+		<param name="map_file_base_name" type="string" value="molly_hector_slam_map" />
+		<param name="geotiff_save_period" type="double" value="0" />
+		<param name="draw_background_checkerboard" type="bool" value="true" />
+		<param name="draw_free_space_grid" type="bool" value="true" />
+		<param name="plugins" type="string" value="hector_geotiff_plugins/TrajectoryMapWriter" />
+	</node>
+
+  <!-- RVIZ NODES AND SETUP -->
+	<node machine ="pc" pkg="rviz" type="rviz" name="rviz"/>
+
+</launch>
