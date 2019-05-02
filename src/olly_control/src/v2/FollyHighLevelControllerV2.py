@@ -13,7 +13,7 @@ class FollyHighLevelControllerV2:
                  path_constraints=None,
                  horizon=10,
                  step_time=0.5,
-                 max_speed=1):
+                 max_speed=.15):
         """
         Initialized controller
         :param molly_initial_position: molly initial position
