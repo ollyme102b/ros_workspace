@@ -60,7 +60,12 @@ class OllyController(object):
         """
         publish command cache and reset last actuation time
         """
-        self._command_publisher.publish(self._command_cache)
+        min_actuation = 0.001
+        rounded_command = Twist()
+        rounded_command.linear.x = self._command_cache.linear.x if abs(self._command_cache.linear.x) > min_actuation else 0.0
+        rounded_command.linear.y = self._command_cache.linear.y if abs(self._command_cache.linear.y) > min_actuation else 0.0
+        rounded_command.angular.z = self._command_cache.angular.z if abs(self._command_cache.angular.z) > min_actuation else 0.0 
+        self._command_publisher.publish(rounded_command)
         self._last_actuation_time = time.time()
 
     def _assert_control(self):
