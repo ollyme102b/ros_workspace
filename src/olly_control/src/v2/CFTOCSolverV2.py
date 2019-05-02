@@ -126,7 +126,7 @@ class CFTOCSolverV2:
 
         # state cost
         for t in range(1, N + 1):
-            J += 100 * ((self.X[0, t] - self.Xm[0, t - 1]) ** 2 + (self.X[1, t] - self.Xm[1, t - 1]) ** 2 - l ** 2) ** 2
+            J +=  100*((self.X[0, t] - self.Xm[0, t - 1]) ** 2 + (self.X[1, t] - self.Xm[1, t - 1]) ** 2 - l ** 2) ** 2
             J += self.X[2, t] ** 2
 
         # input cost

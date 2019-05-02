@@ -1,0 +1,26 @@
+<launch>
+	<!-- Some random parameters for Slam-->
+
+	<arg name="geotiff_map_file_path" default="$(find hector_geotiff)/maps"/>
+	<param name="/use_sim_time" value="false"/>
+	
+	<!-- Machine and Network Definitions -->
+
+	<machine name="pc" address="10.42.0.187" user="rohan" timeout="20.0" env-loader="/home/rohan/Documents/Project-Olly/ros_workspace/local_env_loader.sh"/>
+	<machine name="folly" address="10.42.0.1" user="ubuntu" timeout="20.0" env-loader="/home/ubuntu/Project_Olly/ros_workspace/folly_env_loader.sh"/>
+	<machine name="molly" address="10.42.0.29" user="ubuntu" timeout="20.0" env-loader="/home/ubuntu/Project_Olly/ros_workspace/molly_env_loader.sh"/>
+
+	<!-- Arduino Nodes -->
+
+	 <node machine="folly" pkg="rosserial_python" type="serial_node.py" name="folly_arduino" >
+        <param name="port" value="/dev/ttyUSBlidar" />
+        <remap from="/velocity_cmd" to="/folly/velocity_cmd"/>
+    </node>
+
+    <node machine="molly" pkg="rosserial_python" type="serial_node.py" name="molly_arduino" >
+        <param name="port" value="/dev/ttyUSB1" />
+        <remap from="/velocity_cmd" to="/molly/velocity_cmd"/>
+    </node>
+
+    <!-- Control Nodes -->
+ </launch>

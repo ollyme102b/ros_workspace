@@ -89,8 +89,8 @@ class OllyController(object):
 
     def _inertial_to_body(self, xi, yi):
         yaw = self._position[2]
-        xb = np.cos(yaw) * xi - np.sin(yaw) * yi
-        yb = np.sin(yaw) * xi + np.cos(yaw) * yi
+        xb =  np.cos(yaw) * xi + np.sin(yaw) * yi
+        yb = -np.sin(yaw) * xi + np.cos(yaw) * yi
 
         return xb, yb
 

@@ -32,7 +32,7 @@ class FollyHighLevelController(OllyController):
 
         # initialize companion velocity array and create ROS subscriber
         self._companion_velocity = np.zeros((2,))
-        self._companion_velocity_subscriber = rospy.Subscriber('/' + self._companion_name + "/velocity",
+        self._companion_velocity_subscriber = rospy.Subscriber('/' + self._companion_name + "/global_velocity_cmd",
                                                                Twist,
                                                                self._companion_velocity_callback)
 

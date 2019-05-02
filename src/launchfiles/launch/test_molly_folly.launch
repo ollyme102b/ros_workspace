@@ -12,15 +12,33 @@
 
 	<!-- Arduino Nodes -->
 
-	<!--  <node machine="folly" pkg="rosserial_python" type="serial_node.py" name="folly_arduino" >
+	 <node machine="folly" pkg="rosserial_python" type="serial_node.py" name="folly_arduino" >
         <param name="port" value="/dev/ttyUSBlidar" />
         <remap from="/velocity_cmd" to="/folly/velocity_cmd"/>
-    </node> -->
+    </node>
 
-  <!--   <node machine="molly" pkg="rosserial_python" type="serial_node.py" name="molly_arduino" >
+    <node machine="molly" pkg="rosserial_python" type="serial_node.py" name="molly_arduino" >
         <param name="port" value="/dev/ttyUSB1" />
         <remap from="/velocity_cmd" to="/molly/velocity_cmd"/>
-    </node> -->
+    </node>
+
+    <!-- Control Nodes -->
+
+    <node machine="pc" name="folly_high_level_controller" pkg="olly_control" type="FollyHighLevelController.py" output="screen">
+		<rosparam param="olly_name">"folly"</rosparam>
+		<rosparam param="companion_name">"molly"</rosparam>
+		<rosparam param="step_time">0.1</rosparam>
+		<rosparam param="object_length">1.5</rosparam>
+		<rosparam param="horizon">10</rosparam>
+	</node>
+
+	<node machine="pc" name="joy_node" pkg="joy" type="joy_node"/>
+
+	<node machine="pc" name="joy_to_input" pkg="joy" type="joy_to_input.py">
+		<remap from="/position" to="/molly/position"/>
+		<remap from="/velocity_cmd" to="/molly/velocity_cmd"/>
+		<remap from="/global_velocity_cmd" to="/molly/global_velocity_cmd"/>
+	</node>
 
     <!-- Lidar Nodes -->
 
@@ -35,7 +53,7 @@
 	</node>
 
     <node machine="molly"  pkg="rplidar_ros"  type="rplidarNode" output="screen" name="molly_lidar">
-		<param name="serial_port"         type="string" value="/dev/ttyUSB1"/>
+		<param name="serial_port"         type="string" value="/dev/ttyUSB0"/>
 		<param name="serial_baudrate"     type="int"    value="115200"/>
 		<param name="frame_id"            type="string" value="molly_laser"/>
 		<param name="inverted"            type="bool"   value="false"/>
@@ -187,6 +205,6 @@
 	</node>
 
   <!-- RVIZ NODES AND SETUP -->
-	<node machine ="pc" pkg="rviz" type="rviz" name="rviz"/>
+	<node machine ="pc" pkg="rviz" type="rviz" name="rviz" args="-d $(find launchfiles)/rviz/democonfig.rviz"/>
 
 </launch>
