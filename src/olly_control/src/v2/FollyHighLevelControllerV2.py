@@ -34,7 +34,6 @@ class FollyHighLevelControllerV2:
         A = np.eye(3)  # state dynamics
         B = step_time * np.eye(3)  # input velocity dynamics
 
-        path_constraints = np.array([[0, 1, -0.5]])
         self.optimizer = CFTOCSolverV2(A, B, folly_initial_position, molly_expected_path, horizon, max_speed,
                                        object_length, path_constraints) 
 

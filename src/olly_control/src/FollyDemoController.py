@@ -35,10 +35,10 @@ class FollyHighLevelController(OllyController):
                                                                self._companion_velocity_callback)
 
         # initialize controller objects
-        path_constraints_A = np.array([[0, 1, -0.5], [0, -1, -0.5], [1, 0, -3]])
+        path_constraints_A = np.array([[0, 1, -0.3], [0, -1, -0.3], [1, 0, -2.80]])
         self._controller_A = FollyHighLevelControllerV2(step_time=self._step_time, object_length=self._object_length,
                                                         horizon=self._horizon, path_constraints=path_constraints_A)
-        path_constraints_B = np.array([[0, 1, -0.5], [1, 0, -3], [-1, 0, 2]])
+        path_constraints_B = np.array([[0, 1, -0.3], [1, 0, -2.80], [-1, 0, 2.2]])
         self._controller_B = FollyHighLevelControllerV2(step_time=self._step_time, object_length=self._object_length,
                                                         horizon=self._horizon, path_constraints=path_constraints_B)
 
@@ -62,11 +62,13 @@ class FollyHighLevelController(OllyController):
         provides update to controller object and returns optimal control action
         :return:
         """
-        if self._position[0] < 2.25:
+        if self._position[0] < 2.2:
+            print('mode 1')
             return self._controller_A.update_then_calculate_optimal_actuation(self._companion_position,
                                                                               self._position,
                                                                               self._companion_velocity)
         else:
+            print('mode 2')
             return self._controller_B.update_then_calculate_optimal_actuation(self._companion_position,
                                                                               self._position,
                                                                               self._companion_velocity)
