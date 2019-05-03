@@ -12,7 +12,7 @@ class FollyHighLevelControllerV1:
                  folly_initial_position=np.zeros((3,)),
                  object_length=1,
                  line_path_start_point=np.array([0, 0]),
-                 line_path_end_point=np.array([1, 1]),
+                 line_path_end_point=np.array([1, 0]),
                  horizon=10,
                  step_time=0.1,
                  max_speed=0.1):

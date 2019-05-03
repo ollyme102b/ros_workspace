@@ -77,13 +77,20 @@ def circle_line_intersection_path(m_pos, l, l0, l1, d_m_pos, n, f_pos=np.array([
     for i in range(n):
         xf, yf = circle_line_intersection(m_pos[0], m_pos[1], l, l0[0], l0[1], l1[0], l1[1], xp=xp, yp=yp)
 
-        # add time step path to output path array
-        folly_path[0, i] = xf
-        folly_path[1, i] = yf
-
+        # add time step path to output path arra
         # update folly position for next iteration
-        xp = xf
-        yp = yf
+        if xf is not None:
+            folly_path[0, i] = xf
+            xp = xf
+        else:
+            folly_path[0, i] = xp
+
+        if yf is not None:
+            yp = yf
+            folly_path[1, i] = yf
+        else:
+            folly_path[1, i] = yp
+
 
         # update molly position for next iteration
         m_pos = m_pos + d_m_pos
