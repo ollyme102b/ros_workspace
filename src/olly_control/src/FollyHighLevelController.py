@@ -37,7 +37,7 @@ class FollyHighLevelController(OllyController):
                                                                self._companion_velocity_callback)
 
         # initialize controller object
-        self._controller = FollyHighLevelControllerV1(step_time=self._step_time, object_length=self._object_length,
+        self._controller = FollyHighLevelControllerV2(step_time=self._step_time, object_length=self._object_length,
                                                       horizon=self._horizon)
 
     def _companion_position_callback(self, message):

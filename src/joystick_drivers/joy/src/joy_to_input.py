@@ -23,25 +23,30 @@ def run():
 		rate.sleep()
 	
 class Joystick:
-	def __init__(self, max_vel=0.2):
+	def __init__(self, max_vel=0.05, max_ang_vel=0.3):
 		self.yaw = 0	# current orientation
 		self.vx = 0		# linear x velocity body frame
 		self.vy = 0		# linear y velocity body frame
 		self.vxi = 0 	# inertial vx
 		self.vyi = 0	# inertial vy
 		self.wz = 0		# angular z velocity
-		self.max_vel = max_vel
+		self.max_vel = max_vel 	# max linear velocity [m/s]
+		self.max_ang_vel = max_ang_vel # max angular velocity [rad/s]
 
 	def joy_callback(self, msg):
 		a = 1 			# sensitivity: 0 = cubic, 1 = linear
-		vxi = self.max_vel*(-(a*pow(msg.axes[0],3) + (1-a)*msg.axes[0]))
-		vyi = self.max_vel*(a*pow(msg.axes[1],3) + (1-a)*msg.axes[1])
+		# vxi = self.max_vel*(-(a*pow(msg.axes[0],3) + (1-a)*msg.axes[0]))
+		# vyi = self.max_vel*(a*pow(msg.axes[1],3) + (1-a)*msg.axes[1])
+		vxi = -self.max_vel*np.sign(msg.axes[0])
+		vyi = self.max_vel*np.sign(msg.axes[1])
+
 		vxb, vyb = self.inertial_to_body(vxi, vyi)
 		self.vxi = vxi
 		self.vyi = vyi
 		self.vx = vxb
 		self.vy = vyb
-		self.wz = self.max_vel*(a*pow(msg.axes[3],3) + (1-a)*msg.axes[3])
+		# self.wz = self.max_vel*(a*pow(msg.axes[3],3) + (1-a)*msg.axes[3])
+		self.wz = self.max_ang_vel*np.sign(msg.axes[3])
 
 	def position_callback(self, msg):
 		quaternion = [msg.pose.orientation.x, msg.pose.orientation.y, msg.pose.orientation.z, msg.pose.orientation.w]

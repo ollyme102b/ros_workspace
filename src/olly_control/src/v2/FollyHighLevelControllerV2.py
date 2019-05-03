@@ -13,7 +13,7 @@ class FollyHighLevelControllerV2:
                  path_constraints=None,
                  horizon=10,
                  step_time=0.5,
-                 max_speed=.15):
+                 max_speed=.1):
         """
         Initialized controller
         :param molly_initial_position: molly initial position
@@ -34,8 +34,9 @@ class FollyHighLevelControllerV2:
         A = np.eye(3)  # state dynamics
         B = step_time * np.eye(3)  # input velocity dynamics
 
+        path_constraints = np.array([[0, 1, -0.5]])
         self.optimizer = CFTOCSolverV2(A, B, folly_initial_position, molly_expected_path, horizon, max_speed,
-                                       object_length, path_constraints)
+                                       object_length, path_constraints) 
 
     def _molly_expected_path(self, molly_position, molly_velocity):
         """

@@ -47,6 +47,7 @@ class CFTOCSolverV2:
         :return: optimal actuation value
         """
         self.m.solve(disp=False)
+        print(str(self.slack))
         return np.array([self.U[0, 0].value, self.U[1, 0].value, self.U[2, 0].value]).flatten()
 
     def status(self):
@@ -90,6 +91,7 @@ class CFTOCSolverV2:
         # initialize GEKKO Vars
         self.X = self.m.Array(self.m.Var, (self.nx, N + 1))
         self.U = self.m.Array(self.m.Var, (self.nu, N))
+        self.slack = self.m.Array(self.m.Var, (self.N, ))
 
         # initilaize GEKKO Params
         self.x0 = self.m.Array(self.m.Param, (self.nx,))
@@ -108,11 +110,15 @@ class CFTOCSolverV2:
             for i in range(self.nx):
                 self.m.Equation(self.X[i, t + 1] == temp[i])
 
+        #slack constraints
+        for t in range(N):
+            self.m.Equation(self.slack[t] >= 0)
+
         # path constraints
         if path_constraints is not None:
             for n in range(path_constraints.shape[0]):
                 for t in range(N):
-                    self.m.Equation(np.dot(path_constraints[n, 0:2], self.X[0:2, t]) + path_constraints[n, 2] <= 0)
+                    self.m.Equation(np.dot(path_constraints[n, 0:2], self.X[0:2, t]) + path_constraints[n, 2] - self.slack[t]<= 0)
 
         # input constraints
         if umax is not None:
@@ -126,8 +132,10 @@ class CFTOCSolverV2:
 
         # state cost
         for t in range(1, N + 1):
-            J +=  100*((self.X[0, t] - self.Xm[0, t - 1]) ** 2 + (self.X[1, t] - self.Xm[1, t - 1]) ** 2 - l ** 2) ** 2
+            J +=  10*((self.X[0, t] - self.Xm[0, t - 1]) ** 2 + (self.X[1, t] - self.Xm[1, t - 1]) ** 2 - l ** 2) ** 2
             J += self.X[2, t] ** 2
+        for t in range(N):
+            J += 100*self.slack[t]
 
         # input cost
         for t in range(N):
