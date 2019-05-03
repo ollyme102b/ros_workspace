@@ -32,7 +32,7 @@ class OllyController(object):
         self._companion_name = str(params['companion_name'])
         assert self._olly_name is not None, 'olly_name from launch file cannot be None'
         self._step_time = float(params['step_time'])
-        self._object_length = float(params['step_time'])
+        self._object_length = float(params['object_length'])
         self._horizon = int(params['horizon'])
 
         self._last_actuation_time = time.time()  # set first actuation time
