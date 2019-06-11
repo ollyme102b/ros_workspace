@@ -23,7 +23,7 @@ def run():
 		rate.sleep()
 	
 class Joystick:
-	def __init__(self, max_vel=0.1, max_ang_vel=0.3):
+	def __init__(self, max_vel=0.05, max_ang_vel=0.3):
 		self.yaw = 0	# current orientation
 		self.vx = 0		# linear x velocity body frame
 		self.vy = 0		# linear y velocity body frame
